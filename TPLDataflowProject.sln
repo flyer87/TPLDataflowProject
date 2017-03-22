@@ -1,7 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectDataflowGraphs", "ProjectDataflowGraphs\ProjectDataflowGraphs.csproj", "{54F5D3CC-5A8B-4552-89EE-D837080A48A4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project", "Project\Project.csproj", "{54F5D3CC-5A8B-4552-89EE-D837080A48A4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestProject1", "UnitTestProject1\UnitTestProject1.csproj", "{0D9ED751-8397-4DD7-B269-B0F65FF8F472}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,6 +15,10 @@ Global
 		{54F5D3CC-5A8B-4552-89EE-D837080A48A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{54F5D3CC-5A8B-4552-89EE-D837080A48A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{54F5D3CC-5A8B-4552-89EE-D837080A48A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D9ED751-8397-4DD7-B269-B0F65FF8F472}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D9ED751-8397-4DD7-B269-B0F65FF8F472}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D9ED751-8397-4DD7-B269-B0F65FF8F472}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D9ED751-8397-4DD7-B269-B0F65FF8F472}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
