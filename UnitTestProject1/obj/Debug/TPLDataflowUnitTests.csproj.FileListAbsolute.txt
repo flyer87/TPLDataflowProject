@@ -1,0 +1,9 @@
+D:\ITU_edu\3sem\TPL Dataflow\TPLDataflowProject\UnitTestProject1\bin\Debug\UnitTestProject1.dll
+D:\ITU_edu\3sem\TPL Dataflow\TPLDataflowProject\UnitTestProject1\bin\Debug\UnitTestProject1.pdb
+D:\ITU_edu\3sem\TPL Dataflow\TPLDataflowProject\UnitTestProject1\bin\Debug\ProjectGraphs.exe
+D:\ITU_edu\3sem\TPL Dataflow\TPLDataflowProject\UnitTestProject1\bin\Debug\System.Threading.Tasks.Dataflow.dll
+D:\ITU_edu\3sem\TPL Dataflow\TPLDataflowProject\UnitTestProject1\bin\Debug\ProjectGraphs.pdb
+D:\ITU_edu\3sem\TPL Dataflow\TPLDataflowProject\UnitTestProject1\bin\Debug\System.Threading.Tasks.Dataflow.xml
+D:\ITU_edu\3sem\TPL Dataflow\TPLDataflowProject\UnitTestProject1\obj\Debug\TPLDataflowUnitTests.csprojResolveAssemblyReference.cache
+D:\ITU_edu\3sem\TPL Dataflow\TPLDataflowProject\UnitTestProject1\obj\Debug\UnitTestProject1.dll
+D:\ITU_edu\3sem\TPL Dataflow\TPLDataflowProject\UnitTestProject1\obj\Debug\UnitTestProject1.pdb
