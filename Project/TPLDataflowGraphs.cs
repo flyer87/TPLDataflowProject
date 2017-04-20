@@ -11,13 +11,14 @@ namespace ProjectGraphs
 {
     public class TPLDataflowGraphs
     {
-        const int VALUE = 99;
+        const int INPUT_VALUE = 1;
 
         static void Main(string[] args)
         {
             string creationTime;
             string executionTime;
-            //var graph = Generate2CrossGraph(1000,LongOperation, LongOperationArray);
+            PerformanceTestSumSoFarGraph();
+            //var graph = Generate2CrossGraph(1000, LongOperation, LongOperationArray);
             //Execute2CrossGraph(graph, false);
 
             //var graph = Generate3CrossGraph(5, LongOperationSum, out creationTime);
@@ -41,31 +42,35 @@ namespace ProjectGraphs
             //FrameWork_VerticalGraph();   
             //Framework_2CrossGraph();
             //Framework_SumSoFarGraph();
-            //Framework_3AverageGraph();
-            StartFramework();
+            //Framework_3AverageGraph();            
         }
 
         public static void StartFramework()
         {
-            Framework_SumGraph();
+            PerformanceTestSumGraph();
             GC.Collect();
             GC.WaitForPendingFinalizers();
-            FrameWork_VerticalGraph();
+
+            PerformanceTestVerticalGraph();
             GC.Collect();
             GC.WaitForPendingFinalizers();
-            Framework_2CrossGraph();
+
+            PerformanceTest2CrossGraph();
             GC.Collect();
             GC.WaitForPendingFinalizers();
-            Framework_SumSoFarGraph();
+
+            PerformanceTestSumSoFarGraph();
             GC.Collect();
             GC.WaitForPendingFinalizers();
-            Framework_3AverageGraph();
+
+            PerformanceTest3AverageGraph();
             GC.Collect();
             GC.WaitForPendingFinalizers();
-            FrameWork_3CrossGraph();
+
+            PerformanceTest3CrossGraph();
         }
 
-        public static void FrameWork_VerticalGraph()
+        public static void PerformanceTestVerticalGraph()
         {
             const int CNT_START_NODES = 32;
             const int CNT_END_NODES = 8192;
@@ -82,7 +87,7 @@ namespace ProjectGraphs
                     var graph = GenerateVerticalGraph(cntNodes, LongOperation, out creationTime); // GenerateSumSoFarGraph(cntNodes, LongOperationArray); // GenerateVerticalGraph(1000, LongOperation);
                     //Thread.Sleep(100);
                     ExecuteVerticalGraph(graph, out executionTime);  // ExecuteSumSoFarGraph(graph, false); //ExecuteVerticalGraph(graph);                    
-                    Console.WriteLine(String.Format("{0,7} | {1,-13} | {2,-30}", cntNodes, creationTime, executionTime));
+                    Console.WriteLine(String.Format("{0,7} | {1} | {2}", cntNodes, creationTime, executionTime));
                 }
                 catch (Exception e)
                 {
@@ -91,7 +96,7 @@ namespace ProjectGraphs
             }            
         }
 
-        public static void FrameWork_3CrossGraph()
+        public static void PerformanceTest3CrossGraph()
         {
             const int CNT_START_NODES = 128;
             const int CNT_END_NODES = 8192;
@@ -119,7 +124,7 @@ namespace ProjectGraphs
             Console.WriteLine("After exception ... continues ");
         }
 
-        public static void Framework_SumGraph()
+        public static void PerformanceTestSumGraph()
         {
             const int START_NODES_CNT = 128;
             const int END_NODES_CNT = 4096;
@@ -145,7 +150,7 @@ namespace ProjectGraphs
             }
         }
 
-        public static void Framework_2CrossGraph()
+        public static void PerformanceTest2CrossGraph()
         {
             const int START_NODES_CNT = 128;
             const int END_NODES_CNT = 4096;
@@ -171,9 +176,9 @@ namespace ProjectGraphs
             }
         }
 
-        public static void Framework_SumSoFarGraph()
+        public static void PerformanceTestSumSoFarGraph()
         {
-            const int START_NODES_CNT = 1024;
+            const int START_NODES_CNT = 128;
             const int END_NODES_CNT = 4096;
             const string TEST_STRING = "Performance test: Sum so far graph";
 
@@ -197,7 +202,7 @@ namespace ProjectGraphs
             }
         }
 
-        public static void Framework_3AverageGraph()
+        public static void PerformanceTest3AverageGraph()
         {
             const int START_NODES_CNT = 8;
             const int END_NODES_CNT = 4096;
@@ -435,6 +440,7 @@ namespace ProjectGraphs
                 {
                     int depth = graph.Item1.Length;
 
+                    // ??? asynch or synch
                     var SendingTasks = new List<Task>();
                     for (int col = 0; col < depth; col++)
                     {
@@ -889,7 +895,7 @@ namespace ProjectGraphs
 
             sw.Stop();
             //Console.WriteLine("Creation time: " + sw.Elapsed);
-            const string format = "{0:} ms.";
+            const string format = "{0,10:F3} ms";
             time = string.Format(format, sw.Elapsed.Milliseconds);
 
             return new Tuple<IPropagatorBlock<long, long>, IPropagatorBlock<long, long>>(vertNodes[0], vertNodes[vertNodes.Length - 1]);
@@ -900,24 +906,24 @@ namespace ProjectGraphs
             return isPrime(89) ? 42 : 37;
         }
 
-        public static long LongOperationSum(long[] x)
+        public static long LongOperationSum(long[] inpArray)
         {
             long res = 0;
-            for (int i = 0; i < x.Length; i++)
+            for (int i = 0; i < inpArray.Length; i++)
             {
-                res += x[i];
+                res += inpArray[i];
             }
             return res;            
         }
 
-        public static long LongOperationArray(long[] a)
+        public static long LongOperationArray(long[] inpArray)
         {
-            long lastRes = 0;
-            for (int i = 0; i < a.Length; i++)
+            long res = 0;
+            for (int i = 0; i < inpArray.Length; i++)
             {
-                lastRes += LongOperation();
+                res += LongOperation();
             }
-            return lastRes;
+            return res;
         }
 
         public static bool isPrime(long n)
@@ -925,7 +931,7 @@ namespace ProjectGraphs
             int k = 2;
             while (k * k <= n && n % k != 0)
                 k++;
-            return n >= 2 && k * k > n;
+            return n >= 2 && k * k > n;            
         }
 
         private static IPropagatorBlock<long, long> Create3CrossNode(int batchSize, Func<long[], long> f)
@@ -1076,8 +1082,7 @@ namespace ProjectGraphs
 
             //double mean = st / (n - 15), sdev = Math.Sqrt((sst - mean * mean * (n - 15)) / (n - 15 - 1));
             double mean = st / iterations, sdev = Math.Sqrt((sst - mean * mean * iterations) / (iterations-1));
-            const string format = "{1:0.0000} ms. ; {2:0.0000} ms.";
-            //const string format = "{0} {1} {2}";            
+            const string format = "{1,7:F3} ms ; {2,7:F3} ms";                   
             string formatedStr = string.Format(format, msg, mean, sdev);
             //Console.WriteLine(formatedStr);
             return formatedStr;
