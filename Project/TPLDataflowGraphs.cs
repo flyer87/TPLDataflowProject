@@ -17,15 +17,18 @@ namespace ProjectGraphs
         {
             string creationTime;
             string executionTime;
+            //Console.WriteLine(Stopwatch.Frequency);
+            //PerformanceTest3CrossGraph();
             PerformanceTestSumSoFarGraph();
+            //PerformanceTestVerticalGraph();
             //var graph = Generate2CrossGraph(1000, LongOperation, LongOperationArray);
             //Execute2CrossGraph(graph, false);
-
-            //var graph = Generate3CrossGraph(5, LongOperationSum, out creationTime);
+                        
+            //var graph = Generate3CrossGraph(256, LongOperationSum, out creationTime);
             //Execute3CrossGraph(graph, false, out executionTime);
 
-            //var graph = GenerateSumSoFarGraph(100, LongOperationArray);
-            //ExecuteSumSoFarGraph(graph, false);
+            //var graph = GenerateSumSoFarGraph(100, LongOperationArray, out creationTime);
+            //ExecuteSumSoFarGraph(graph, false, out executionTime);
 
             //var graph = Generate3AverageGraph(1000, LongOperationArray);
             //Execute3AverageGraph(graph, false);
@@ -79,26 +82,26 @@ namespace ProjectGraphs
             Console.WriteLine(TEST_STRING);
             Console.WriteLine("  Nodes | Creation time | Execution time(Avg; St.dev)");
             for (int cntNodes = CNT_START_NODES; cntNodes <= CNT_END_NODES; cntNodes = cntNodes * 2)
-            {                
+            {
                 try
                 {
                     string creationTime;
                     string executionTime;
                     var graph = GenerateVerticalGraph(cntNodes, LongOperation, out creationTime); // GenerateSumSoFarGraph(cntNodes, LongOperationArray); // GenerateVerticalGraph(1000, LongOperation);
                     //Thread.Sleep(100);
-                    ExecuteVerticalGraph(graph, out executionTime);  // ExecuteSumSoFarGraph(graph, false); //ExecuteVerticalGraph(graph);                    
+                    ExecuteVerticalGraph(graph, false, out executionTime);
                     Console.WriteLine(String.Format("{0,7} | {1} | {2}", cntNodes, creationTime, executionTime));
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e.Message);   
-                }                                
-            }            
+                    Console.WriteLine(e.Message);
+                }
+            }
         }
 
         public static void PerformanceTest3CrossGraph()
         {
-            const int CNT_START_NODES = 128;
+            const int CNT_START_NODES = 16;
             const int CNT_END_NODES = 8192;
             const string TEST_STRING = "Performance test: 3 Cross graph";
 
@@ -178,13 +181,13 @@ namespace ProjectGraphs
 
         public static void PerformanceTestSumSoFarGraph()
         {
-            const int START_NODES_CNT = 128;
-            const int END_NODES_CNT = 4096;
+            const int CNT_START_NODES = 128;
+            const int CNT_END_NODES = 8192; // 4096;
             const string TEST_STRING = "Performance test: Sum so far graph";
 
             Console.WriteLine(TEST_STRING);
             Console.WriteLine("  Nodes | Creation time | Execution time(Avg; St.dev)");
-            for (int cntNodes = START_NODES_CNT; cntNodes <= END_NODES_CNT; cntNodes = cntNodes * 2)
+            for (int cntNodes = CNT_START_NODES; cntNodes <= CNT_END_NODES; cntNodes = cntNodes * 2)
             {
                 try
                 {
@@ -192,7 +195,7 @@ namespace ProjectGraphs
                     string executionTime;
                     var graph = GenerateSumSoFarGraph(cntNodes, LongOperationArray, out creationTime); // GenerateSumSoFarGraph(cntNodes, LongOperationArray); // GenerateVerticalGraph(1000, LongOperation);
                     Thread.Sleep(100);
-                    Execute2CrossGraph(graph, false, out executionTime);  // ExecuteSumSoFarGraph(graph, false); //ExecuteVerticalGraph(graph);
+                    ExecuteSumSoFarGraph(graph, false, out executionTime); //ExecuteVerticalGraph(graph);
                     Console.WriteLine(String.Format("{0,7} | {1,-13} | {2,-30}", cntNodes, creationTime, executionTime));
                 }
                 catch (Exception)
@@ -228,25 +231,25 @@ namespace ProjectGraphs
             }
         }
 
-        public static Tuple<IPropagatorBlock<long, long>[], IPropagatorBlock<long, long>[]> GenerateSumSoFarGraph(int depth,
+        public static Tuple<IPropagatorBlock<long, long>[], IPropagatorBlock<long, long>[]> GenerateSumSoFarGraph(int width,
             Func<long[], long> f, out string creationTime)
         {
             Stopwatch sw = new Stopwatch();
             sw.Restart();
 
             // create
-            var firstLayer = new BroadcastBlock<long>[depth];
-            var secondLayer = new IPropagatorBlock<long, long>[depth];
-            for (int i = 0; i < depth; i++)
+            var firstLayer = new BroadcastBlock<long>[width];
+            var secondLayer = new IPropagatorBlock<long, long>[width];
+            for (int i = 0; i < width; i++)
             {
                 firstLayer[i] = new BroadcastBlock<long>(null);
                 secondLayer[i] = CreateSumSoFarNode(i + 1, f);
             }
 
             // linking
-            for (int i = 0; i < depth; i++)
+            for (int i = 0; i < width; i++)
             {
-                for (int k = i; k < depth; k++)
+                for (int k = i; k < width; k++)
                 {
                     firstLayer[i].LinkTo(secondLayer[k]);
                 }
@@ -255,7 +258,6 @@ namespace ProjectGraphs
             sw.Stop();
             //Console.WriteLine("Creation: {0}", sw.Elapsed);
             creationTime = sw.Elapsed.Milliseconds.ToString();
-
             return new Tuple<IPropagatorBlock<long, long>[], IPropagatorBlock<long, long>[]>(firstLayer, secondLayer);
         }
 
@@ -324,26 +326,60 @@ namespace ProjectGraphs
                 }
             }
             else
+                //for (int k = 0; k < 9; k++)
+                //{
+                //    Stopwatch sw = Stopwatch.StartNew();
+                //    for (int i = 0; i < graph.Item1.Length; i++)
+                //    {
+                //        graph.Item1[i].Post(1);
+                //    }
+
+                //    long res = 0;
+                //    foreach (var node in graph.Item2)
+                //    {
+                //        res += node.Receive();
+                //    }
+                //    var time = sw.Elapsed;
+                //    //if (k < 2) continue;
+                //    Console.WriteLine("Time {0}, in ms: {1}", k, time);
+                //    //Thread.Sleep(1000);
+                //}
+
                 executionTime = BenchMark("Sum so far", (x) =>
                 {
                     int cntLayerNodes = graph.Item1.Length;
-                    var tasks1 = new List<Task>();
+                    // version 1
+                    //var tasks1 = new List<Task>();
+                    //for (int nodeId = 0; nodeId < cntLayerNodes; nodeId++)
+                    //{
+                    //    int k = nodeId;
+                    //    tasks1.Add(graph.Item1[k].SendAsync(x));
+                    //}
+
+                    //var tasks2 = new List<Task<long>>();
+                    //for (int nodeId = 0; nodeId < cntLayerNodes; nodeId++)
+                    //{
+                    //    int k = nodeId;
+                    //    tasks2.Add(graph.Item2[k].ReceiveAsync());
+                    //}
+
+                    //Task.WhenAll(tasks1.ToArray());
+                    //Task.WaitAll(tasks2.ToArray());
+
+                    // version 2                  
                     for (int nodeId = 0; nodeId < cntLayerNodes; nodeId++)
                     {
-                        int k = nodeId;
-                        tasks1.Add(graph.Item1[k].SendAsync(x));
+                        graph.Item1[nodeId].Post(1);
                     }
 
-                    var tasks2 = new List<Task<long>>();
                     for (int nodeId = 0; nodeId < cntLayerNodes; nodeId++)
                     {
-                        int k = nodeId;
-                        tasks2.Add(graph.Item2[k].ReceiveAsync());
+                        graph.Item2[nodeId].Receive();
                     }
 
-                    Task.WhenAll(tasks1.ToArray());
-                    Task.WaitAll(tasks2.ToArray());
-                    // result?
+                    // version 3                   
+                    //Parallel.For(0, cntLayerNodes, nodeId => { graph.Item1[nodeId].Post(1); });
+                    //Parallel.For(0, cntLayerNodes, nodeId => { graph.Item2[nodeId].Receive(); });
 
                     return 1;
                 });
@@ -351,27 +387,27 @@ namespace ProjectGraphs
             return result;
         }
 
-        public static Tuple<IPropagatorBlock<long, long>[], IPropagatorBlock<long, long>[]> Generate3AverageGraph(int depth,
+        public static Tuple<IPropagatorBlock<long, long>[], IPropagatorBlock<long, long>[]> Generate3AverageGraph(int width,
             Func<long[], long> f, out string creationTime)
         {
             Stopwatch sw = new Stopwatch();
             sw.Restart();
 
             // create nodes
-            IPropagatorBlock<long, long>[] firstLayer = new IPropagatorBlock<long, long>[depth];
-            for (int i = 0; i < depth; i++)
+            IPropagatorBlock<long, long>[] firstLayer = new IPropagatorBlock<long, long>[width];
+            for (int i = 0; i < width; i++)
             {
                 firstLayer[i] = new BroadcastBlock<long>(x => x);
             }
 
-            IPropagatorBlock<long, long>[] secondLayer = new IPropagatorBlock<long, long>[depth - 2];
-            for (int i = 0; i < depth - 2; i++)
+            IPropagatorBlock<long, long>[] secondLayer = new IPropagatorBlock<long, long>[width - 2];
+            for (int i = 0; i < width - 2; i++)
             {
                 secondLayer[i] = Create3AverageNode(f);
             }
 
             // link nodes - iterate over the 2nd layer
-            for (int i = 0; i < depth - 2; i++)
+            for (int i = 0; i < width - 2; i++)
             {
                 firstLayer[i].LinkTo(secondLayer[i]);
                 firstLayer[i + 1].LinkTo(secondLayer[i]);
@@ -445,6 +481,7 @@ namespace ProjectGraphs
                     for (int col = 0; col < depth; col++)
                     {
                         //graph.Item1[col].Post(x);
+                        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                         SendingTasks.Add(graph.Item1[col].SendAsync(x));
                     }
 
@@ -697,7 +734,6 @@ namespace ProjectGraphs
             //Console.WriteLine(result);
 
 
-
             // =========== BENCHMARK Starts ===================
 
             executionTime = "";
@@ -714,54 +750,74 @@ namespace ProjectGraphs
                 }
             }
             else
-                // =============== Benchmark ==========
-                executionTime = BenchMark("3 cross graph", x =>
+                for (int k = 0; k < 9; k++)
                 {
-                    //Thread.Sleep(100);
-                    //var tasksSend = new List<Task>();
-                    //foreach (var node in graph.Item1)
+                    Stopwatch sw = Stopwatch.StartNew();
                     for (int i = 0; i < graph.Item1.Length; i++)
                     {
-                        //tasksSend.Add(node.SendAsync(1));
-                        //Console.WriteLine("sdf");
                         graph.Item1[i].Post(1);
                     }
 
-                    //Thread.Sleep(10);
-                    //Task.WaitAll(tasksSend.ToArray());
-                    //var tasksReceive = new List<Task<long>>();
                     long res = 0;
                     foreach (var node in graph.Item2)
                     {
-                        //tasksReceive.Add(node.ReceiveAsync());                    
                         res += node.Receive();
                     }
+                    var time = sw.Elapsed;
+                    //if (k < 2) continue;
+                    Console.WriteLine("Time {0}, in ms: {1}", k, time);
+                    //Thread.Sleep(1000);
+                }
+            
 
-                    //long res = 1;
+                // =============== Benchmark ==========
+                //executionTime = BenchMark("3 cross graph", x =>
+                //{
+                //    //Thread.Sleep(100);
+                //    //var tasksSend = new List<Task>();
+                //    //foreach (var node in graph.Item1)
+                //    for (int i = 0; i < graph.Item1.Length; i++)
+                //    {
+                //        //tasksSend.Add(node.SendAsync(1));
+                //        //Console.WriteLine("sdf");
+                //        graph.Item1[i].Post(1);
+                //    }
 
-                    //Task.WhenAll(tasksReceive.ToArray()).ContinueWith(t =>
-                    //{
-                    //    long sum = t.Result.ToList().Sum();                    
-                    //    Interlocked.Add(ref res, sum);
-                    //}).Wait();
-                    // res += t.Result.ToList().Sum()
+                //    //Thread.Sleep(10);
+                //    //Task.WaitAll(tasksSend.ToArray());
+                //    //var tasksReceive = new List<Task<long>>();
+                //    long res = 0;
+                //    foreach (var node in graph.Item2)
+                //    {
+                //        //tasksReceive.Add(node.ReceiveAsync());                    
+                //        res += node.Receive();
+                //    }
 
-                    //Task.WaitAll(tasksReceive.ToArray());
-                    //foreach (var task in tasksReceive)
-                    //{
-                    //    long taskres = (int)task.Result;
-                    //    //Console.WriteLine("tskres = " + taskres);
-                    //    res += (int)taskres;
-                    //}
+                //    //long res = 1;
 
-                    //Thread.Sleep(10);
-                    //Console.WriteLine(res);
+                //    //Task.WhenAll(tasksReceive.ToArray()).ContinueWith(t =>
+                //    //{
+                //    //    long sum = t.Result.ToList().Sum();                    
+                //    //    Interlocked.Add(ref res, sum);
+                //    //}).Wait();
+                //    // res += t.Result.ToList().Sum()
 
-                    return (int)res / 5;
-                });
+                //    //Task.WaitAll(tasksReceive.ToArray());
+                //    //foreach (var task in tasksReceive)
+                //    //{
+                //    //    long taskres = (int)task.Result;
+                //    //    //Console.WriteLine("tskres = " + taskres);
+                //    //    res += (int)taskres;
+                //    //}
+
+                //    //Thread.Sleep(10);
+                //    //Console.WriteLine(res);
+
+                //    return (int)res / 5;
+                //});
 
             // =============== BENCHMARK Ends ==========
-            
+
             return result;
         }
 
@@ -792,7 +848,6 @@ namespace ProjectGraphs
             {
                 foreach (var node in graph.Item1)
                 {
-                    //sendingTasks.Add(node.SendAsync(x));
                     node.Post(1);
                 }
 
@@ -844,8 +899,8 @@ namespace ProjectGraphs
             return new Tuple<IPropagatorBlock<long, long>[], IPropagatorBlock<long[], long>>(nodes, transformer);
         }
 
-        public static void ExecuteVerticalGraph(Tuple<IPropagatorBlock<long, long>, IPropagatorBlock<long, long>> vertGraph, 
-            out string executionTime)
+        public static long ExecuteVerticalGraph(Tuple<IPropagatorBlock<long, long>, IPropagatorBlock<long, long>> graph,
+            bool isTestForCorrectness, out string executionTime)
         {
             //const int n = 10;
             //Stopwatch sw = new Stopwatch();
@@ -857,13 +912,23 @@ namespace ProjectGraphs
             //    sw.Stop();
             //    Console.WriteLine("Execution time {0}: {1}. Result = {2}", i + 1, sw.Elapsed, res);
             //}
-           
-            executionTime = BenchMark("", (x) =>
+            executionTime = "";
+            long result = 0;
+            if (isTestForCorrectness)
             {
-                vertGraph.Item1.Post(x);
-                long res = vertGraph.Item2.Receive();
-                return res;
-            });            
+                graph.Item1.Post(1);
+                result = graph.Item2.Receive();                
+            }
+            else
+            {
+                executionTime = BenchMark("Vertical graph", (x) =>
+                {
+                    graph.Item1.Post(x);
+                    long res = graph.Item2.Receive();
+                    return res;
+                });
+            }
+            return result;
         }
 
         public static Tuple<IPropagatorBlock<long, long>, IPropagatorBlock<long, long>> GenerateVerticalGraph(int cntNodes,
@@ -882,7 +947,7 @@ namespace ProjectGraphs
             vertNodes[0] = new BufferBlock<long>();
             for (int i = 1; i < cntNodes; i++)
             {
-                vertNodes[i] = new TransformBlock<long, long>(x => f()); // f = LongOperation()
+                vertNodes[i] = new TransformBlock<long, long>(x => f()); // f = LongOperation() or some other
             }
 
             var linkOpt = new DataflowLinkOptions() { PropagateCompletion = true };
@@ -913,7 +978,7 @@ namespace ProjectGraphs
             {
                 res += inpArray[i];
             }
-            return res;            
+            return res;
         }
 
         public static long LongOperationArray(long[] inpArray)
@@ -931,7 +996,7 @@ namespace ProjectGraphs
             int k = 2;
             while (k * k <= n && n % k != 0)
                 k++;
-            return n >= 2 && k * k > n;            
+            return n >= 2 && k * k > n;
         }
 
         private static IPropagatorBlock<long, long> Create3CrossNode(int batchSize, Func<long[], long> f)
@@ -1054,61 +1119,39 @@ namespace ProjectGraphs
         {
             int n = 50;
             double dummy = 0.0, st = 0.0, sst = 0.0, totalTime = 0.0;
-            int iterations = 0;                        
+            int iterations = 0;
 
             int i = 0;
             while (i < n && totalTime < 15000)
             {
                 //Console.WriteLine(i);
                 Stopwatch sw = Stopwatch.StartNew();
-                long res = f(i); 
+                long res = f(i);
                 dummy += res;
-                Thread.Sleep(10);
+                //Thread.Sleep(10);
                 sw.Stop();
-                i++;   
+                i++;
 
                 //Thread.Sleep(5);
                 double time = sw.ElapsedMilliseconds;
                 totalTime += time;
-                if (totalTime < 100) continue;                                
+                //if (totalTime < 100 || i < 1) continue;
+                if (i < 3) continue;
 
-                iterations++;                
+                iterations++;
                 //Console.WriteLine("time= {0}", time);
                 //Console.WriteLine("time = {0}, i = {1}, res = {2}, totalTime = {3}", time, i, res, totalTime);                
                 //Console.WriteLine(time +", "+ st);
                 st += time;
-                sst += time * time;                                      
+                sst += time * time;
             }
 
             //double mean = st / (n - 15), sdev = Math.Sqrt((sst - mean * mean * (n - 15)) / (n - 15 - 1));
-            double mean = st / iterations, sdev = Math.Sqrt((sst - mean * mean * iterations) / (iterations-1));
-            const string format = "{1,7:F3} ms ; {2,7:F3} ms";                   
+            double mean = st / iterations, sdev = Math.Sqrt((sst - mean * mean * iterations) / (iterations - 1));
+            const string format = "{1,7:F3} ms ; {2,7:F3} ms";
             string formatedStr = string.Format(format, msg, mean, sdev);
             //Console.WriteLine(formatedStr);
             return formatedStr;
-        }
-
-        private static void Do(Func<int, int> f)
-        {
-            int n = 10; //, totalCount = 0;
-            double dummy = 0.0, runningTime = 0.0, st = 0.0, sst = 0.0;
-            // do { 
-            //count *= 2;
-            st = sst = 0.0;
-            for (int j = 0; j < n; j++)
-            {
-                Stopwatch t = new Stopwatch();
-                //for (int i = 0; i < count; i++)
-                dummy += f.Invoke(j);
-                runningTime = (double)t.ElapsedMilliseconds;
-                double time = runningTime * 1e9;
-                st += time;
-                sst += time * time;
-
-            }
-            //} while (runningTime < 0.25 && count < Integer.MAX_VALUE/2);
-            double mean = st / n, sdev = Math.Sqrt((sst - mean * mean * n) / (n - 1));
-            //System.out.printf("%-25s %15.1f ns %10.2f %10d%n", msg, mean, sdev, count);
         }
     }
 }
