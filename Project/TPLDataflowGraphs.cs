@@ -17,27 +17,28 @@ namespace ProjectGraphs
         {
             string creationTime;
             string executionTime;
-            //Console.WriteLine(Stopwatch.Frequency);
-            //PerformanceTest3CrossGraph();
-            PerformanceTestSumSoFarGraph();
-            //PerformanceTestVerticalGraph();
-            //var graph = Generate2CrossGraph(1000, LongOperation, LongOperationArray);
-            //Execute2CrossGraph(graph, false);
-                        
-            //var graph = Generate3CrossGraph(256, LongOperationSum, out creationTime);
-            //Execute3CrossGraph(graph, false, out executionTime);
+            StartFramework();
 
-            //var graph = GenerateSumSoFarGraph(100, LongOperationArray, out creationTime);
-            //ExecuteSumSoFarGraph(graph, false, out executionTime);
+            //PerformanceTest3WayCrossGraph();
+            //PerformanceTestManyDependencyPrefixSumGraph();
+            //PerformanceTestLinearGraph();
+            //var graph = GeneratePrefixSumGraph(1000, LongOperation, LongOperationArray);
+            //ExecutePrefixSumGraph(graph, false);
 
-            //var graph = Generate3AverageGraph(1000, LongOperationArray);
-            //Execute3AverageGraph(graph, false);
+            //var graph = Generate3WayCrossGraph(256, LongOperationSum, out creationTime);
+            //Execute3WayCrossGraph(graph, out executionTime);
 
-            //var graph = GenerateVerticalGraph(1000, LongOperation);
-            //ExecuteVerticalGraph(graph);
+            //var graph = GenerateManyDepPrefixSumGraph(100, LongOperationArray, out creationTime);
+            //ExecuteManyDepPrefixSumGraph(graph, out executionTime);
 
-            //var graph = GenerateSumGraph(10, LongOperationArray);
-            //ExecuteSumGraph(graph, false);
+            //var graph = GenerateRunningAverageGraph(1000, LongOperationArray);
+            //ExecuteRunningAverageGraph(graph, false);
+
+            //var graph = GenerateLinearGraph(1000, LongOperation);
+            //ExecuteLinearGraph(graph);
+
+            //var graph = GenerateFlatGraph(10, LongOperationArray);
+            //ExecuteFlatGraph(graph, false);
 
             //Framework_SumGraph();
             //GC.Collect();
@@ -50,47 +51,49 @@ namespace ProjectGraphs
 
         public static void StartFramework()
         {
-            PerformanceTestSumGraph();
+            PerformanceTestFlatGraph();
             GC.Collect();
             GC.WaitForPendingFinalizers();
 
-            PerformanceTestVerticalGraph();
+            PerformanceTestLinearGraph();
             GC.Collect();
             GC.WaitForPendingFinalizers();
 
-            PerformanceTest2CrossGraph();
+            PerformanceTestPrefixSumGraph();
             GC.Collect();
             GC.WaitForPendingFinalizers();
 
-            PerformanceTestSumSoFarGraph();
+            PerformanceTestManyDependencyPrefixSumGraph();
             GC.Collect();
             GC.WaitForPendingFinalizers();
 
-            PerformanceTest3AverageGraph();
+            PerformanceTestRunningAverageGraph();
             GC.Collect();
             GC.WaitForPendingFinalizers();
 
-            PerformanceTest3CrossGraph();
+            PerformanceTest3WayCrossGraph();
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
         }
 
-        public static void PerformanceTestVerticalGraph()
+        public static void PerformanceTestLinearGraph()
         {
             const int CNT_START_NODES = 32;
             const int CNT_END_NODES = 8192;
-            const string TEST_STRING = "Performance test: Vertical Graph";
+            const string TEST_STRING = "Performance test: Linear Graph";
 
             Console.WriteLine(TEST_STRING);
-            Console.WriteLine("  Nodes | Creation time | Execution time(Avg; St.dev)");
+            Console.WriteLine("  Nodes , Creation time , Execution time(Avg; St.dev)");
             for (int cntNodes = CNT_START_NODES; cntNodes <= CNT_END_NODES; cntNodes = cntNodes * 2)
             {
                 try
                 {
                     string creationTime;
                     string executionTime;
-                    var graph = GenerateVerticalGraph(cntNodes, LongOperation, out creationTime); // GenerateSumSoFarGraph(cntNodes, LongOperationArray); // GenerateVerticalGraph(1000, LongOperation);
+                    var graph = GenerateLinearGraph(cntNodes, LongOperation, out creationTime); // GenerateManyDepPrefixSumGraph(cntNodes, LongOperationArray); // GenerateLinearGraph(1000, LongOperation);
                     //Thread.Sleep(100);
-                    ExecuteVerticalGraph(graph, false, out executionTime);
-                    Console.WriteLine(String.Format("{0,7} | {1} | {2}", cntNodes, creationTime, executionTime));
+                    ExecuteLinearGraph(graph, out executionTime);
+                    Console.WriteLine(String.Format("{0,7} , {1,-13} , {2,-30}", cntNodes, creationTime, executionTime));
                 }
                 catch (Exception e)
                 {
@@ -99,24 +102,24 @@ namespace ProjectGraphs
             }
         }
 
-        public static void PerformanceTest3CrossGraph()
+        public static void PerformanceTest3WayCrossGraph()
         {
-            const int CNT_START_NODES = 16;
+            const int CNT_START_NODES = 32;
             const int CNT_END_NODES = 8192;
-            const string TEST_STRING = "Performance test: 3 Cross graph";
+            const string TEST_STRING = "Performance test: 3-way Cross graph";
 
             Console.WriteLine(TEST_STRING);
-            Console.WriteLine("  Nodes | Creation time | Execution time(Avg; St.dev)");
+            Console.WriteLine("  Nodes , Creation time , Execution time(Avg; St.dev)");
             for (int cntNodes = CNT_START_NODES; cntNodes <= CNT_END_NODES; cntNodes = cntNodes * 2)
             {
                 try
                 {
                     string creationTime;
                     string executionTime;
-                    var graph = Generate3CrossGraph(cntNodes, LongOperationArray, out creationTime); // GenerateSumSoFarGraph(cntNodes, LongOperationArray); // GenerateVerticalGraph(1000, LongOperation);
+                    var graph = Generate3WayCrossGraph(cntNodes, LongOperationArray, out creationTime); // GenerateManyDepPrefixSumGraph(cntNodes, LongOperationArray); // GenerateLinearGraph(1000, LongOperation);
                     Thread.Sleep(100);
-                    Execute3CrossGraph(graph, false, out executionTime);  // ExecuteSumSoFarGraph(graph, false); //ExecuteVerticalGraph(graph);
-                    Console.WriteLine(String.Format("{0,7} | {1,-13} | {2,-30}", cntNodes, creationTime, executionTime));
+                    Execute3WayCrossGraph(graph, out executionTime);  // ExecuteManyDepPrefixSumGraph(graph, false); //ExecuteLinearGraph(graph);
+                    Console.WriteLine(String.Format("{0,7} , {1,-13} , {2,-30}", cntNodes, creationTime, executionTime));
                 }
                 catch (Exception)
                 {
@@ -124,27 +127,27 @@ namespace ProjectGraphs
                 }
             }
 
-            Console.WriteLine("After exception ... continues ");
+            // Console.WriteLine("After exception ... continues ");
         }
 
-        public static void PerformanceTestSumGraph()
+        public static void PerformanceTestFlatGraph()
         {
-            const int START_NODES_CNT = 128;
-            const int END_NODES_CNT = 4096;
-            const string TEST_STRING = "Performance test: Sum graph";
+            const int START_NODES_CNT = 32;
+            const int END_NODES_CNT = 8192;
+            const string TEST_STRING = "Performance test: Flat graph";
 
             Console.WriteLine(TEST_STRING);
-            Console.WriteLine("  Nodes | Creation time | Execution time(Avg; St.dev)");
+            Console.WriteLine("  Nodes , Creation time , Execution time(Avg; St.dev)");
             for (int cntNodes = START_NODES_CNT; cntNodes <= END_NODES_CNT; cntNodes = cntNodes * 2)
             {
                 try
                 {
                     string creationTime;
                     string executionTime;
-                    var graph = GenerateSumGraph(cntNodes, LongOperationArray, out creationTime); // GenerateSumSoFarGraph(cntNodes, LongOperationArray); // GenerateVerticalGraph(1000, LongOperation);
+                    var graph = GenerateFlatGraph(cntNodes, LongOperationArray, out creationTime); // GenerateManyDepPrefixSumGraph(cntNodes, LongOperationArray); // GenerateLinearGraph(1000, LongOperation);
                     Thread.Sleep(100);
-                    ExecuteSumGraph(graph, false, out executionTime);  // ExecuteSumSoFarGraph(graph, false); //ExecuteVerticalGraph(graph);
-                    Console.WriteLine(String.Format("{0,7} | {1,-13} | {2,-30}", cntNodes, creationTime, executionTime));
+                    ExecuteFlatGraph(graph, out executionTime);  // ExecuteManyDepPrefixSumGraph(graph, false); //ExecuteLinearGraph(graph);
+                    Console.WriteLine(String.Format("{0,7} , {1,-13} , {2,-30}", cntNodes, creationTime, executionTime));
                 }
                 catch (Exception)
                 {
@@ -153,24 +156,24 @@ namespace ProjectGraphs
             }
         }
 
-        public static void PerformanceTest2CrossGraph()
+        public static void PerformanceTestPrefixSumGraph()
         {
-            const int START_NODES_CNT = 128;
-            const int END_NODES_CNT = 4096;
-            const string TEST_STRING = "Performance test: 2 cross graph";
+            const int START_NODES_CNT = 32;
+            const int END_NODES_CNT = 8192;
+            const string TEST_STRING = "Performance test: Prefix sum graph";
 
             Console.WriteLine(TEST_STRING);
-            Console.WriteLine("  Nodes | Creation time | Execution time(Avg; St.dev)");
+            Console.WriteLine("  Nodes , Creation time , Execution time(Avg; St.dev)");
             for (int cntNodes = START_NODES_CNT; cntNodes <= END_NODES_CNT; cntNodes = cntNodes * 2)
             {
                 try
                 {
                     string creationTime;
                     string executionTime;
-                    var graph = Generate2CrossGraph(cntNodes, LongOperation, LongOperationArray, out creationTime); // GenerateSumSoFarGraph(cntNodes, LongOperationArray); // GenerateVerticalGraph(1000, LongOperation);
+                    var graph = GeneratePrefixSumGraph(cntNodes, LongOperation, LongOperationArray, out creationTime); // GenerateManyDepPrefixSumGraph(cntNodes, LongOperationArray); // GenerateLinearGraph(1000, LongOperation);
                     Thread.Sleep(100);
-                    Execute2CrossGraph(graph, false, out executionTime);  // ExecuteSumSoFarGraph(graph, false); //ExecuteVerticalGraph(graph);
-                    Console.WriteLine(String.Format("{0,7} | {1,-13} | {2,-30}", cntNodes, creationTime, executionTime));
+                    ExecutePrefixSumGraph(graph, out executionTime);  // ExecuteManyDepPrefixSumGraph(graph, false); //ExecuteLinearGraph(graph);
+                    Console.WriteLine(String.Format("{0,7} , {1,-13} , {2,-30}", cntNodes, creationTime, executionTime));
                 }
                 catch (Exception)
                 {
@@ -179,24 +182,24 @@ namespace ProjectGraphs
             }
         }
 
-        public static void PerformanceTestSumSoFarGraph()
+        public static void PerformanceTestManyDependencyPrefixSumGraph()
         {
-            const int CNT_START_NODES = 128;
+            const int CNT_START_NODES = 32;
             const int CNT_END_NODES = 8192; // 4096;
-            const string TEST_STRING = "Performance test: Sum so far graph";
+            const string TEST_STRING = "Performance test: Many-dependency prefix graph";
 
             Console.WriteLine(TEST_STRING);
-            Console.WriteLine("  Nodes | Creation time | Execution time(Avg; St.dev)");
+            Console.WriteLine("  Nodes , Creation time , Execution time(Avg; St.dev)");
             for (int cntNodes = CNT_START_NODES; cntNodes <= CNT_END_NODES; cntNodes = cntNodes * 2)
             {
                 try
                 {
                     string creationTime;
                     string executionTime;
-                    var graph = GenerateSumSoFarGraph(cntNodes, LongOperationArray, out creationTime); // GenerateSumSoFarGraph(cntNodes, LongOperationArray); // GenerateVerticalGraph(1000, LongOperation);
+                    var graph = GenerateManyDepPrefixSumGraph(cntNodes, LongOperationArray, out creationTime); // GenerateManyDepPrefixSumGraph(cntNodes, LongOperationArray); // GenerateLinearGraph(1000, LongOperation);
                     Thread.Sleep(100);
-                    ExecuteSumSoFarGraph(graph, false, out executionTime); //ExecuteVerticalGraph(graph);
-                    Console.WriteLine(String.Format("{0,7} | {1,-13} | {2,-30}", cntNodes, creationTime, executionTime));
+                    ExecuteManyDepPrefixSumGraph(graph, out executionTime); //ExecuteLinearGraph(graph);
+                    Console.WriteLine(String.Format("{0,7} , {1,-13} , {2,-30}", cntNodes, creationTime, executionTime));
                 }
                 catch (Exception)
                 {
@@ -205,24 +208,24 @@ namespace ProjectGraphs
             }
         }
 
-        public static void PerformanceTest3AverageGraph()
+        public static void PerformanceTestRunningAverageGraph()
         {
-            const int START_NODES_CNT = 8;
-            const int END_NODES_CNT = 4096;
-            const string TEST_STRING = "Performance test: 3 average graph";
+            const int START_NODES_CNT = 32;
+            const int END_NODES_CNT = 8192;
+            const string TEST_STRING = "Performance test: Running average graph";
 
             Console.WriteLine(TEST_STRING);
-            Console.WriteLine("  Nodes | Creation time | Execution time(Avg; St.dev)");
+            Console.WriteLine("  Nodes , Creation time , Execution time(Avg; St.dev)");
             for (int cntNodes = START_NODES_CNT; cntNodes <= END_NODES_CNT; cntNodes = cntNodes * 2)
             {
                 try
                 {
                     string creationTime;
                     string executionTime;
-                    var graph = Generate3AverageGraph(cntNodes, LongOperationArray, out creationTime); // GenerateSumSoFarGraph(cntNodes, LongOperationArray); // GenerateVerticalGraph(1000, LongOperation);
+                    var graph = GenerateRunningAverageGraph(cntNodes, LongOperationArray, out creationTime); // GenerateManyDepPrefixSumGraph(cntNodes, LongOperationArray); // GenerateLinearGraph(1000, LongOperation);
                     Thread.Sleep(100);
-                    Execute3AverageGraph(graph, false, out executionTime);  // ExecuteSumSoFarGraph(graph, false); //ExecuteVerticalGraph(graph);
-                    Console.WriteLine(String.Format("{0,7} | {1,-13} | {2,-30}", cntNodes, creationTime, executionTime));
+                    ExecuteRunningAverageGraph(graph, out executionTime);  // ExecuteManyDepPrefixSumGraph(graph, false); //ExecuteLinearGraph(graph);
+                    Console.WriteLine(String.Format("{0,7} , {1,-13} , {2,-30}", cntNodes, creationTime, executionTime));
                 }
                 catch (Exception)
                 {
@@ -231,7 +234,7 @@ namespace ProjectGraphs
             }
         }
 
-        public static Tuple<IPropagatorBlock<long, long>[], IPropagatorBlock<long, long>[]> GenerateSumSoFarGraph(int width,
+        public static Tuple<IPropagatorBlock<long, long>[], IPropagatorBlock<long, long>[]> GenerateManyDepPrefixSumGraph(int width,
             Func<long[], long> f, out string creationTime)
         {
             Stopwatch sw = new Stopwatch();
@@ -243,7 +246,7 @@ namespace ProjectGraphs
             for (int i = 0; i < width; i++)
             {
                 firstLayer[i] = new BroadcastBlock<long>(null);
-                secondLayer[i] = CreateSumSoFarNode(i + 1, f);
+                secondLayer[i] = CreateManyDepPrefixSumNode(i + 1, f);
             }
 
             // linking
@@ -261,8 +264,8 @@ namespace ProjectGraphs
             return new Tuple<IPropagatorBlock<long, long>[], IPropagatorBlock<long, long>[]>(firstLayer, secondLayer);
         }
 
-        public static long ExecuteSumSoFarGraph(Tuple<IPropagatorBlock<long, long>[], IPropagatorBlock<long, long>[]> graph,
-            bool isTestForCorrectness, out string executionTime)
+        public static long ExecuteManyDepPrefixSumGraph(Tuple<IPropagatorBlock<long, long>[], IPropagatorBlock<long, long>[]> graph,
+            out string executionTime, bool isTestForCorrectness = false)
         {
             //int cntTrials = 70;
             //for (int i = 0; i < cntTrials; i++)
@@ -387,7 +390,7 @@ namespace ProjectGraphs
             return result;
         }
 
-        public static Tuple<IPropagatorBlock<long, long>[], IPropagatorBlock<long, long>[]> Generate3AverageGraph(int width,
+        public static Tuple<IPropagatorBlock<long, long>[], IPropagatorBlock<long, long>[]> GenerateRunningAverageGraph(int width,
             Func<long[], long> f, out string creationTime)
         {
             Stopwatch sw = new Stopwatch();
@@ -403,7 +406,7 @@ namespace ProjectGraphs
             IPropagatorBlock<long, long>[] secondLayer = new IPropagatorBlock<long, long>[width - 2];
             for (int i = 0; i < width - 2; i++)
             {
-                secondLayer[i] = Create3AverageNode(f);
+                secondLayer[i] = CreateRunningAverageNode(f);
             }
 
             // link nodes - iterate over the 2nd layer
@@ -421,8 +424,8 @@ namespace ProjectGraphs
             return new Tuple<IPropagatorBlock<long, long>[], IPropagatorBlock<long, long>[]>(firstLayer, secondLayer);
         }
 
-        public static long Execute3AverageGraph(Tuple<IPropagatorBlock<long, long>[], IPropagatorBlock<long, long>[]> graph,
-            bool isTestForCorrectness, out string executionTime)
+        public static long ExecuteRunningAverageGraph(Tuple<IPropagatorBlock<long, long>[], IPropagatorBlock<long, long>[]> graph,
+             out string executionTime, bool isTestForCorrectness = false)
         {
             //int depth = graph.Item1.Length;
             //Random r = new Random();
@@ -500,7 +503,7 @@ namespace ProjectGraphs
             return result;
         }
 
-        public static Tuple<IPropagatorBlock<long, long>[], IPropagatorBlock<long, long>[]> Generate2CrossGraph(int depth,
+        public static Tuple<IPropagatorBlock<long, long>[], IPropagatorBlock<long, long>[]> GeneratePrefixSumGraph(int depth,
             Func<long> f1, Func<long[], long> f2, out string creationTime)
         {
             Stopwatch sw = new Stopwatch();
@@ -519,8 +522,8 @@ namespace ProjectGraphs
                 }
                 else // other rows 
                 {
-                    graph[row, 0] = Create2CrossNode_1(f1);
-                    graph[row, 1] = Create2CrossNode_2(f2);  //new TransformBlock<long, long>(x => LongOperation()); 
+                    graph[row, 0] = CreatePrefixSumNode_1(f1);
+                    graph[row, 1] = CreatePrefixSumNode_2(f2);  //new TransformBlock<long, long>(x => LongOperation()); 
                 }
             }
 
@@ -549,8 +552,8 @@ namespace ProjectGraphs
             return new Tuple<IPropagatorBlock<long, long>[], IPropagatorBlock<long, long>[]>(firstLayer, lastLayer);
         }
 
-        public static long Execute2CrossGraph(Tuple<IPropagatorBlock<long, long>[], IPropagatorBlock<long, long>[]> graph,
-            bool isTestForCorrectness, out string executionTime)
+        public static long ExecutePrefixSumGraph(Tuple<IPropagatorBlock<long, long>[], IPropagatorBlock<long, long>[]> graph,
+            out string executionTime, bool isTestForCorrectness = false)
         {
             // ??? Posting by using Parallel.For()
             // ? Receive() or AsynchReceive()
@@ -598,7 +601,7 @@ namespace ProjectGraphs
             return result;
         }
 
-        public static Tuple<IPropagatorBlock<long, long>[], IPropagatorBlock<long, long>[]> Generate3CrossGraph(int cntNodes,
+        public static Tuple<IPropagatorBlock<long, long>[], IPropagatorBlock<long, long>[]> Generate3WayCrossGraph(int cntNodes,
             Func<long[], long> f, out string creationTime)
         {
             int cntRows = cntNodes;
@@ -625,11 +628,11 @@ namespace ProjectGraphs
                     {
                         if (col == 0 || col == cntCols - 1)
                         {
-                            matrix[row, col] = Create3CrossNode(2, f);
+                            matrix[row, col] = Create3WayCrossNode(2, f);
                         }
                         else
                         {
-                            matrix[row, col] = Create3CrossNode(3, f);
+                            matrix[row, col] = Create3WayCrossNode(3, f);
                         }
                     }
                 }
@@ -682,8 +685,8 @@ namespace ProjectGraphs
             return new Tuple<IPropagatorBlock<long, long>[], IPropagatorBlock<long, long>[]>(firstLayer, lastLayer);
         }
 
-        public static long Execute3CrossGraph(Tuple<IPropagatorBlock<long, long>[], IPropagatorBlock<long, long>[]> graph,
-            bool isTestForCorrectness, out string executionTime)
+        public static long Execute3WayCrossGraph(Tuple<IPropagatorBlock<long, long>[], IPropagatorBlock<long, long>[]> graph,
+            out string executionTime, bool isTestForCorrectness = false)
         {
             int cntNodes = graph.Item1.Count();
             int cntAttempts = 50;
@@ -735,7 +738,6 @@ namespace ProjectGraphs
 
 
             // =========== BENCHMARK Starts ===================
-
             executionTime = "";
             if (isTestForCorrectness)
             {
@@ -821,8 +823,8 @@ namespace ProjectGraphs
             return result;
         }
 
-        public static long ExecuteSumGraph(Tuple<IPropagatorBlock<long, long>[], IPropagatorBlock<long[], long>> graph,
-            bool isTestForCorrectness, out string executionTime)
+        public static long ExecuteFlatGraph(Tuple<IPropagatorBlock<long, long>[], IPropagatorBlock<long[], long>> graph,
+            out string executionTime, bool isTestForCorrectness = false)
         {
             // Posting by using Parallel.For()
             //Random r = new Random();
@@ -872,7 +874,7 @@ namespace ProjectGraphs
             return result;
         }
 
-        public static Tuple<IPropagatorBlock<long, long>[], IPropagatorBlock<long[], long>> GenerateSumGraph(int cntNodes,
+        public static Tuple<IPropagatorBlock<long, long>[], IPropagatorBlock<long[], long>> GenerateFlatGraph(int cntNodes,
             Func<long[], long> f, out string creationTime)
         {
             Stopwatch sw = new Stopwatch();
@@ -899,8 +901,8 @@ namespace ProjectGraphs
             return new Tuple<IPropagatorBlock<long, long>[], IPropagatorBlock<long[], long>>(nodes, transformer);
         }
 
-        public static long ExecuteVerticalGraph(Tuple<IPropagatorBlock<long, long>, IPropagatorBlock<long, long>> graph,
-            bool isTestForCorrectness, out string executionTime)
+        public static long ExecuteLinearGraph(Tuple<IPropagatorBlock<long, long>, IPropagatorBlock<long, long>> graph,
+            out string executionTime, bool isTestForCorrectness = false)
         {
             //const int n = 10;
             //Stopwatch sw = new Stopwatch();
@@ -931,7 +933,7 @@ namespace ProjectGraphs
             return result;
         }
 
-        public static Tuple<IPropagatorBlock<long, long>, IPropagatorBlock<long, long>> GenerateVerticalGraph(int cntNodes,
+        public static Tuple<IPropagatorBlock<long, long>, IPropagatorBlock<long, long>> GenerateLinearGraph(int cntNodes,
             Func<long> f, out string time)
         {
             /*
@@ -999,7 +1001,7 @@ namespace ProjectGraphs
             return n >= 2 && k * k > n;
         }
 
-        private static IPropagatorBlock<long, long> Create3CrossNode(int batchSize, Func<long[], long> f)
+        private static IPropagatorBlock<long, long> Create3WayCrossNode(int batchSize, Func<long[], long> f)
         {
             // creation
             IPropagatorBlock<long, long[]> target = new BatchBlock<long>(batchSize, new GroupingDataflowBlockOptions() { Greedy = true });
@@ -1030,7 +1032,7 @@ namespace ProjectGraphs
             return DataflowBlock.Encapsulate(target, source);
         }
 
-        private static IPropagatorBlock<long, long> Create2CrossNode_1(Func<long> f)
+        private static IPropagatorBlock<long, long> CreatePrefixSumNode_1(Func<long> f)
         {
             var target = new TransformBlock<long, long>(x => f()); // f = LongOperation
             var source = new BroadcastBlock<long>(x => x);
@@ -1050,7 +1052,7 @@ namespace ProjectGraphs
             return DataflowBlock.Encapsulate(target, source);
         }
 
-        private static IPropagatorBlock<long, long> Create2CrossNode_2(Func<long[], long> f)
+        private static IPropagatorBlock<long, long> CreatePrefixSumNode_2(Func<long[], long> f)
         {
             const int BATCHSIZE = 2;
             // creation
@@ -1072,7 +1074,7 @@ namespace ProjectGraphs
             return DataflowBlock.Encapsulate(target, source);
         }
 
-        private static IPropagatorBlock<long, long> Create3AverageNode(Func<long[], long> f)
+        private static IPropagatorBlock<long, long> CreateRunningAverageNode(Func<long[], long> f)
         {
             const int BATCH_SIZE = 3;
             // create
@@ -1094,7 +1096,7 @@ namespace ProjectGraphs
             return DataflowBlock.Encapsulate(target, source);
         }
 
-        private static IPropagatorBlock<long, long> CreateSumSoFarNode(int batchSize, Func<long[], long> f)
+        private static IPropagatorBlock<long, long> CreateManyDepPrefixSumNode(int batchSize, Func<long[], long> f)
         {
             // create
             var target = new BatchBlock<long>(batchSize);
@@ -1148,7 +1150,7 @@ namespace ProjectGraphs
 
             //double mean = st / (n - 15), sdev = Math.Sqrt((sst - mean * mean * (n - 15)) / (n - 15 - 1));
             double mean = st / iterations, sdev = Math.Sqrt((sst - mean * mean * iterations) / (iterations - 1));
-            const string format = "{1,7:F3} ms ; {2,7:F3} ms";
+            const string format = "{1,7:F3} ms , {2,7:F3} ms";
             string formatedStr = string.Format(format, msg, mean, sdev);
             //Console.WriteLine(formatedStr);
             return formatedStr;
