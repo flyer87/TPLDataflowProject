@@ -51,25 +51,25 @@ namespace ProjectGraphs
 
         public static void StartFramework()
         {
-            //PerformanceTestFlatGraph();
-            //GC.Collect();
-            //GC.WaitForPendingFinalizers();
+            PerformanceTestFlatGraph();
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
 
-            //PerformanceTestLinearGraph();
-            //GC.Collect();
-            //GC.WaitForPendingFinalizers();
+            PerformanceTestLinearGraph();
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
 
-            //PerformanceTestPrefixSumGraph();
-            //GC.Collect();
-            //GC.WaitForPendingFinalizers();
+            PerformanceTestPrefixSumGraph();
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
 
-            //PerformanceTestManyDependencyPrefixSumGraph();
-            //GC.Collect();
-            //GC.WaitForPendingFinalizers();
+            PerformanceTestManyDependencyPrefixSumGraph();
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
 
-            //PerformanceTestRunningAverageGraph();
-            //GC.Collect();
-            //GC.WaitForPendingFinalizers();
+            PerformanceTestRunningAverageGraph();
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
 
             PerformanceTest3WayCrossGraph();
             GC.Collect();
