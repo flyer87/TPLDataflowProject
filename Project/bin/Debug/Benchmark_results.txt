@@ -1,0 +1,39 @@
+Performance test: Flat graph
+  Nodes , Creation time , Execution time(Avg; St.dev)
+     32 , 35            ,   0.021 ms ,   0.144 ms       
+     64 , 0             ,   0.000 ms ,   0.000 ms       
+    128 , 0             ,   0.104 ms ,   0.722 ms       
+    256 , 0             ,   0.042 ms ,   0.289 ms       
+    512 , 1             ,   0.500 ms ,   1.833 ms       
+   1024 , 1             ,   1.125 ms ,   0.866 ms       
+   2048 , 8             ,   2.917 ms ,   2.323 ms       
+   4096 , 20            ,   5.042 ms ,   4.267 ms       
+   8192 , 34            ,  10.500 ms ,   3.848 ms       
+Performance test: Linear Graph
+  Nodes , Creation time , Execution time(Avg; St.dev)
+     32 ,      8.000 ms ,   0.021 ms ,   0.144 ms       
+     64 ,      0.000 ms ,   0.000 ms ,   0.000 ms       
+    128 ,      0.000 ms ,   0.063 ms ,   0.320 ms       
+    256 ,      0.000 ms ,   1.792 ms ,   0.544 ms       
+    512 ,      1.000 ms ,   4.146 ms ,   0.412 ms       
+   1024 ,      6.000 ms ,  10.167 ms ,   0.694 ms       
+   2048 ,     15.000 ms ,  19.438 ms ,   1.821 ms       
+   4096 ,     30.000 ms ,  33.708 ms ,   5.086 ms       
+   8192 ,    105.000 ms ,  45.417 ms ,   6.881 ms       
+Performance test: Prefix sum graph
+  Nodes , Creation time , Execution time(Avg; St.dev)
+     32 , 4             ,   0.000 ms ,   0.000 ms       
+     64 , 0             ,   0.000 ms ,   0.000 ms       
+    128 , 0             ,   1.000 ms ,   0.000 ms       
+    256 , 2             ,   2.333 ms ,   1.374 ms       
+    512 , 6             ,   5.271 ms ,   1.233 ms       
+   1024 , 45            ,  13.583 ms ,   5.622 ms       
+   2048 , 100           ,  39.146 ms ,   6.497 ms       
+   4096 , 217           ,  74.854 ms ,  15.973 ms       
+   8192 , 416           , 119.917 ms ,  25.335 ms       
+Performance test: Many-dependency prefix graph
+  Nodes , Creation time , Execution time(Avg; St.dev)
+     32 , 0             ,   0.083 ms ,   0.454 ms       
+     64 , 1             ,   0.042 ms ,   0.202 ms       
+    128 , 7             ,   1.542 ms ,   1.051 ms       
+    256 , 23            ,   6.500 ms ,   4.515 ms       

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using System.Diagnostics;
 using System.Threading;
+using System.Collections;
 
 namespace ProjectGraphs
 {
@@ -15,42 +16,13 @@ namespace ProjectGraphs
 
         static void Main(string[] args)
         {
-            string creationTime;
-            string executionTime;
-            StartFramework();
-
-            //PerformanceTest3WayCrossGraph();
-            //PerformanceTestManyDependencyPrefixSumGraph();
-            //PerformanceTestLinearGraph();
-            //var graph = GeneratePrefixSumGraph(1000, LongOperation, LongOperationArray);
-            //ExecutePrefixSumGraph(graph, false);
-
-            //var graph = Generate3WayCrossGraph(256, LongOperationSum, out creationTime);
-            //Execute3WayCrossGraph(graph, out executionTime);
-
-            //var graph = GenerateManyDepPrefixSumGraph(100, LongOperationArray, out creationTime);
-            //ExecuteManyDepPrefixSumGraph(graph, out executionTime);
-
-            //var graph = GenerateRunningAverageGraph(1000, LongOperationArray);
-            //ExecuteRunningAverageGraph(graph, false);
-
-            //var graph = GenerateLinearGraph(1000, LongOperation);
-            //ExecuteLinearGraph(graph);
-
-            //var graph = GenerateFlatGraph(10, LongOperationArray);
-            //ExecuteFlatGraph(graph, false);
-
-            //Framework_SumGraph();
-            //GC.Collect();
-            //GC.WaitForPendingFinalizers();
-            //FrameWork_VerticalGraph();   
-            //Framework_2CrossGraph();
-            //Framework_SumSoFarGraph();
-            //Framework_3AverageGraph();            
+            StartFramework();           
         }
 
         public static void StartFramework()
         {
+            PrintSystemInfo();            
+
             PerformanceTestFlatGraph();
             GC.Collect();
             GC.WaitForPendingFinalizers();
@@ -478,7 +450,7 @@ namespace ProjectGraphs
                 }
             }
             else
-                executionTime = BenchMark("3 average graph", x =>
+                executionTime = BenchMark("Running average graph", x =>
                 {
                     int depth = graph.Item1.Length;
 
@@ -590,7 +562,7 @@ namespace ProjectGraphs
                 result += graph.Item2[1].Receive(); // should take longer creationTime
             }
             else
-                executionTime = BenchMark("2 cross graph", x =>
+                executionTime = BenchMark("Prefix sum graph", x =>
                 {
                     graph.Item1[0].Post(1);
                     graph.Item1[1].Post(1);
@@ -698,50 +670,6 @@ namespace ProjectGraphs
             long result = 0;
             double elapsedTimeSum = 0;
 
-            //executionTime = "";
-            //List<long> intsList = new List<long>();
-            //for (int i = 0; i < cntAttempts; i++)
-            //{
-            //    Stopwatch sw = Stopwatch.StartNew();
-            //    //intsList.Clear();
-            //    //var tasks = new List<Task<bool>>();
-            //    //foreach (var node in graph.Item1)
-            //    //{
-            //    //    tasks.Add(node.SendAsync(1));
-            //    //}
-            //    //Task.WaitAll(tasks.ToArray());
-
-            //    foreach (IPropagatorBlock<long, long> node in graph.Item1)
-            //    {
-            //        node.Post((long)1);
-            //    }
-
-            //    result = 0;
-            //    foreach (IPropagatorBlock<long, long> node in graph.Item2)
-            //    {
-            //        //long item = node.Receive(); // node.Receive(new TimeSpan(5000000));
-            //        //intsList.Add(item);
-            //        //finalSum += item;
-
-            //        result += node.Receive();                    
-            //    }                
-            //    Thread.Sleep(10);
-
-            //    //Task.WaitAll(tasks.ToArray());
-
-            //    //sw.Stop();
-            //    //elapsedTimeSum = elapsedTimeSum + sw.ElapsedMilliseconds;
-            //    Console.WriteLine("Time: {0}, Result: {1}", sw.ElapsedMilliseconds, result);
-            //    //Thread.Sleep(10);
-            //    //Console.WriteLine("Execution creationTime {0}: {1}, Sum: {2}", i + 1, sw.Elapsed, finalSum);
-            //    //String s = "" ;
-            //    //intsList.ForEach(x => s = s + x + ", ");
-            //    //Console.WriteLine(elapsedTimeSum);
-            //}
-            //Console.WriteLine(elapsedTimeSum);
-            //Console.WriteLine(result);
-
-
             // =========== BENCHMARK Starts ===================
             executionTime = "";
             if (isTestForCorrectness)
@@ -756,28 +684,7 @@ namespace ProjectGraphs
                     result += node.Receive();
                 }
             }
-            else
-                //for (int k = 0; k < 9; k++)
-                //{
-                //    Stopwatch sw = Stopwatch.StartNew();
-                //    for (int i = 0; i < graph.Item1.Length; i++)
-                //    {
-                //        graph.Item1[i].Post(1);
-                //    }
-
-                //    long res = 0;
-                //    foreach (var node in graph.Item2)
-                //    {
-                //        res += node.Receive();
-                //    }
-                //    var time = sw.Elapsed;
-                //    //if (k < 2) continue;
-                //    Console.WriteLine("Time {0}, in ms: {1}", k, time);
-                //    //Thread.Sleep(1000);
-                //}
-            
-
-                // =============== Benchmark ==========
+            else                           
                 executionTime = BenchMark("3way cross graph", x =>
                 {
                     //Thread.Sleep(100);
@@ -799,26 +706,6 @@ namespace ProjectGraphs
                         //tasksReceive.Add(node.ReceiveAsync());                    
                         res += node.Receive();
                     }
-
-                    //long res = 1;
-
-                    //Task.WhenAll(tasksReceive.ToArray()).ContinueWith(t =>
-                    //{
-                    //    long sum = t.Result.ToList().Sum();                    
-                    //    Interlocked.Add(ref res, sum);
-                    //}).Wait();
-                    // res += t.Result.ToList().Sum()
-
-                    //Task.WaitAll(tasksReceive.ToArray());
-                    //foreach (var task in tasksReceive)
-                    //{
-                    //    long taskres = (int)task.Result;
-                    //    //Console.WriteLine("tskres = " + taskres);
-                    //    res += (int)taskres;
-                    //}
-
-                    //Thread.Sleep(10);
-                    //Console.WriteLine(res);
 
                     return (int)res / 5;
                 });
@@ -861,7 +748,7 @@ namespace ProjectGraphs
                 result = graph.Item2.Receive();
             }
             else
-                executionTime = BenchMark("Sum graph", (x) =>
+                executionTime = BenchMark("Flat graph", (x) =>
                 {
                     //List<Task> sendingTasks = new List<Task>();
                     foreach (var node in graph.Item1)
@@ -930,7 +817,7 @@ namespace ProjectGraphs
             }
             else
             {
-                executionTime = BenchMark("Vertical graph", (x) =>
+                executionTime = BenchMark("Linear graph", (x) =>
                 {
                     graph.Item1.Post(x);
                     long res = graph.Item2.Receive();
@@ -1161,6 +1048,18 @@ namespace ProjectGraphs
             string formatedStr = string.Format(format, msg, mean, sdev);
             //Console.WriteLine(formatedStr);
             return formatedStr;
+        }
+
+        private static void PrintSystemInfo()
+        {
+            Console.WriteLine("System info:");
+            Console.WriteLine("OS: {0}", Environment.OSVersion);
+            Console.WriteLine("OS is x64: {0}", Environment.Is64BitOperatingSystem);
+            Console.WriteLine("Processors count: {0}", Environment.ProcessorCount);
+            Console.WriteLine("Total RAM: {0} MB",
+                new Microsoft.VisualBasic.Devices.ComputerInfo().TotalPhysicalMemory / 1024 / 1024);
+            Console.WriteLine("Available physical memory: {0} MB", new Microsoft.VisualBasic.Devices.ComputerInfo().AvailablePhysicalMemory / 1024 / 1024);
+            Console.WriteLine("Common language runtime: {0}", Environment.Version);
         }
     }
 }

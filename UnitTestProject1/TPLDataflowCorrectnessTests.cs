@@ -30,7 +30,7 @@ namespace TPLDataflowUnitTests
         }
 
         [TestMethod]
-        public void TestVectorGraph_1000()
+        public void TestLinearGraph_1000()
         {
             string creationTime;
             string executionTime;
@@ -41,7 +41,7 @@ namespace TPLDataflowUnitTests
         }
 
         [TestMethod]
-        public void TestSumGraph_1000()
+        public void TestFlatGraph_1000()
         {
             string creationTime;
             string executionTime;
